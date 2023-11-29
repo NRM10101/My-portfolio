@@ -1,3 +1,16 @@
 npm create vite@latest ./  > react > javascript
 npm i
 
+npm i @react-three/fiber  //for 3D content  ( three js and react 3 fiber )
+npm i @react-three/drei
+
+<Canvas></Canvas> --use for 3D rendering
+<Sespense></Sespense> --use as wrapper and use for rendering the loading screen
+
+react 3 fiber -- when rendering 2D components it allows to convert it into 3D content
+   > <Html>  contect </Html> --when we wrap contect using this tag there is no issues with 3D Canvas
+
+npm i @react-spring/three  //import {a} from '@react-spring/three' //To enables animations
+
+import {###}......  - named import
+import ###  .....   - default import
