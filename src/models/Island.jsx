@@ -12,7 +12,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import islandScene from '../../Assets/assets/3d/island.glb'
 import { a } from '@react-spring/three' //To enables animations
 
-const Island = function ({ isRotating, setIsRotating, ...props }) {
+const Island = function ({ isRotating, setIsRotating,setCurrentStage, ...props }) {
     const islandRef = useRef();
 
     const { nodes, materials } = useGLTF(islandScene);
@@ -76,6 +76,8 @@ const Island = function ({ isRotating, setIsRotating, ...props }) {
             if (Math.abs(rotationSpeed.current) < 0.001) {
                 rotationSpeed.current = 0;
             }
+
+            islandRef.current.rotation.y+=rotationSpeed.current;
         } else {
             const rotation = islandRef.current.rotation.y;
 
