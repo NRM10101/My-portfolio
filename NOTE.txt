@@ -14,3 +14,5 @@ npm i @react-spring/three  //import {a} from '@react-spring/three' //To enables 
 
 import {###}......  - named import
 import ###  .....   - default import
+
+npm i @emailjs/browser  //For use email communication

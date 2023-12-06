@@ -27,7 +27,7 @@ const renderContent = {
         <h1 className='sm:text-x1 sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5'>
             Hi, I am <span className='font-semibold'>NRM</span>👋
             <br />
-            A Cyber Security Undergratuate from UoM
+            A Cyber Security Undergratuate from UoM | CSE
         </h1>
     ),
     2: (
