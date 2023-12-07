@@ -5,6 +5,16 @@ License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 Source: https://sketchfab.com/3d-models/foxs-islands-163b68e09fcc47618450150be7785907
 Title: Fox's islands
 */
+/**
+ * IMPORTANT: Loading glTF models into a Three.js scene is a lot of work.
+ * Before we can configure or animate our model’s meshes, we need to iterate through
+ * each part of our model’s meshes and save them separately.
+ *
+ * But luckily there is an app that turns gltf or glb files into jsx components
+ * For this model, visit https://gltf.pmnd.rs/
+ * And get the code. And then add the rest of the things.
+ * YOU DON'T HAVE TO WRITE EVERYTHING FROM SCRATCH
+ */
 
 import React, { useRef, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
@@ -12,53 +22,67 @@ import { useFrame, useThree } from "@react-three/fiber";
 import islandScene from '../../Assets/assets/3d/island.glb'
 import { a } from '@react-spring/three' //To enables animations
 
-const Island = function ({ isRotating, setIsRotating,setCurrentStage, ...props }) {
+const Island = function ({ isRotating, setIsRotating, setCurrentStage, currentFocusPoint, ...props }) {
     const islandRef = useRef();
 
     const { nodes, materials } = useGLTF(islandScene);
-    const { gl, viewport } = useThree();
+    const { gl, viewport } = useThree();//get acces to the Three.js renderer and viewport
 
-    const lastX = useRef(0);
-    const rotationSpeed = useRef(0);
-    const dampingFactor = 0.95;
+    const lastX = useRef(0); //Use a ref for the last mouse x position
+    const rotationSpeed = useRef(0);//Use a ref for a rotation speed
+    const dampingFactor = 0.95;//Define a damping factor to control rotation damping
 
+    //Handle pointer (mouse or touch) down event
     const handlePointerDown = (e) => {
         e.stopPropagation();
         e.preventDefault();
         setIsRotating(true);
 
+        // Calculate the clientX based on whether it's a touch event or a mouse event
         const clientX = e.touches ? e.touches[0].clientX : e.clinetX;
 
+        // Store the current clientX position for reference
         lastX.current = clientX;
     }
+
+    // Handle pointer (mouse or touch) up event
     const handlePointerUp = (e) => {
         e.stopPropagation();
         e.preventDefault();
         setIsRotating(false);
     }
+    // Handle pointer (mouse or touch) move event
     const handlePointerMove = (e) => {
         e.stopPropagation();
         e.preventDefault();
 
-        if (isRotating){
+        if (isRotating) {
+            // If rotation is enabled, calculate the change in clientX position
             const clientX = e.touches ? e.touches[0].clientX : e.clinetX;
 
+            // calculate the change in the horizontal position of the mouse cursor or touch input,
+            // relative to the viewport's width
             const delta = (clientX - lastX.current) / viewport.width;
-    
+
+            // Update the island's rotation based on the mouse/touch movement
             islandRef.current.rotation.y += delta * 0.01 * Math.PI;
+
+            // Update the reference for the last clientX position
             lastX.current = clientX;
+
+            // Update the rotation speed
             rotationSpeed.current = delta * 0.01 * Math.PI;
-        }        
+        }
     }
     const handleKeyDown = (e) => {
         if (e.key === 'ArrowLeft') {
             if (!isRotating) setIsRotating(true)
             islandRef.current.rotation.y += 0.01 * Math.PI;
-            rotationSpeed.current=0.0125;
+            rotationSpeed.current = 0.0125;
         } else if (e.key === 'ArrowRight') {
             if (!isRotating) setIsRotating(true)
             islandRef.current.rotation.y -= 0.01 * Math.PI;
-            rotationSpeed.current=-0.0125;
+            rotationSpeed.current = -0.0125;
         }
     }
     const handleKeyUp = (e) => {
@@ -75,7 +99,7 @@ const Island = function ({ isRotating, setIsRotating,setCurrentStage, ...props }
                 rotationSpeed.current = 0;
             }
 
-            islandRef.current.rotation.y+=rotationSpeed.current;
+            islandRef.current.rotation.y += rotationSpeed.current;
         } else {
             const rotation = islandRef.current.rotation.y;
 
@@ -119,7 +143,7 @@ const Island = function ({ isRotating, setIsRotating,setCurrentStage, ...props }
     })
 
     useEffect(() => { //callback function
-        const canvas=gl.domElement;  //we touch the canvas
+        const canvas = gl.domElement;  //we touch the canvas
         canvas.addEventListener('pointerdown', handlePointerDown);
         canvas.addEventListener('pointerup', handlePointerUp);
         canvas.addEventListener('pointermove', handlePointerMove);
